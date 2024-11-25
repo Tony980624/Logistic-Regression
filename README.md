@@ -28,3 +28,36 @@ $\beta^t 是当前参数值，\nabla f(\beta^t)是目标函数的一阶导数，
 
 同样的道理， $\beta^(t+1)=\beta^t-H^{-1}\nabla f(\beta^t)$ 这个公式其实和一维公式是一样的，只是把二阶导数在 $x_k$ 点的值替换成了Hessian矩阵，也就是多个变量的二阶导的矩阵，把一阶导数的值换成了向量。
 
+## 信用卡违约数据案例
+
+```
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+data = pd.read_csv(f'D:/Download/UCI_Credit_Card.csv')
+data.head()
+# data.isna().sum()
+Y = data.iloc[:,-1]
+X = data.iloc[:,1:-1]
+X_train,X_test,Y_train,Y_test = train_test_split(X,Y,test_size=0.25,random_state=72)
+model = LogisticRegression(max_iter=2000)
+model.fit(X_train, Y_train)
+Y_pred = model.predict(X_test)
+
+# 打印混淆矩阵
+conf_matrix = confusion_matrix(Y_test, Y_pred)
+print("混淆矩阵:")
+print(conf_matrix)
+```
+模型预测结果：
+
+| 实际\预测 | 预测: 0 | 预测: 1 |
+|-----------|----------|----------|
+| 实际: 0   | 5661     | 218      |
+| 实际: 1   | 1224     | 397      |   
+
+对于这个案例，关注点应该是预测到了多少比例的违约人，这个模型只预测到了 397/(1224+397) ,比较低的准确率，远低于投色子。
+
+
