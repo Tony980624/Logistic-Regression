@@ -60,4 +60,29 @@ print(conf_matrix)
 
 对于这个案例，关注点应该是预测到了多少比例的违约人，这个模型只预测到了 397/(1224+397) ,比较低的准确率，远低于投色子。
 
+## Lasso约束，正则的公式和灵感
+
+上面讲到逻辑回归的损失函数是最大化这个 $L = \sum^N_{i=1}[y_ilog(p_i)+(1-y_i)log(1-p_i)]$ ，前面加一个负号，也就是变成最小化 $L = -\sum^N_{i=1}[y_ilog(p_i)+(1-y_i)log(1-p_i)] $.再加上一个惩罚项 $\lambda \sum_{j=1}^P |\beta_j|$, 损失函数变为 $L = -\sum^N_{i=1}[y_ilog(p_i)+(1-y_i)log(1-p_i)] + \lambda \sum_{j=1}^P |\beta_j|$, 要使它最小，说明惩罚项不能太大，要使不重要的系数为0才行。
+
+## Lasso 规范化的原理和迭代方法
+
+Lasso Logistic 回归使用的优化方法是梯度下降或其变种（如坐标下降法）。
+
+优化目标： $L = -\sum^N_{i=1}[y_ilog(p_i)+(1-y_i)log(1-p_i)] + \lambda \sum_{j=1}^P |\beta_j|$
+
+参数更新法: $\beta_j^{t+1} = \beta_j^t - \eta (\frac{\partial{L}}{\partial{\beta_j}}+sign(\beta_j)) $ 
+
+$\eta$ 是学习率，步长
+
+$$
+\text{sign}(\beta_j) =
+\begin{cases} 
++1, & \beta_j > 0 \\
+-1, & \beta_j < 0 \\
+0, & \beta_j = 0
+\end{cases}
+$$
+
+符号函数，表面优化的方向。
+
 
